@@ -13,16 +13,36 @@ class Webgl {
     this.shaderProgram = null;
     this.programInfo = null;
     this.buffers = null;
+    this.squareRotation = 0.0;
+    this.delta = 0;
   }
 
   init() {
-    this.initShaderProgram();
-    this.setProgramInfo();
-    this.initBuffers();
-    this.drawScene();
+    this.#initShaderProgram();
+    this.#setProgramInfo();
+    this.#initBuffers();
+    this.#drawScene();
+
+    const bindRender = this.render.bind(this);
+
+    requestAnimationFrame(bindRender);
+
+    return this;
   }
 
-  initShaderProgram() {
+  render(now) {
+    const nowSeconds = now * 0.001; // convert to seconds
+    this.squareRotation += nowSeconds - this.delta;
+    this.delta = nowSeconds;
+
+    this.#drawScene();
+
+    const bindRender = this.render.bind(this);
+
+    requestAnimationFrame(bindRender);
+  }
+
+  #initShaderProgram() {
     this.shaderProgram = initShaderProgram(
       this.ctx,
       vertexShaderSource,
@@ -30,17 +50,16 @@ class Webgl {
     );
   }
 
-  setProgramInfo() {
+  #setProgramInfo() {
     this.programInfo = getProgramInfo(this.ctx, this.shaderProgram);
   }
 
-  initBuffers() {
-    const buffersPositions = initBuffers(this.ctx);
-    this.buffers = { position: buffersPositions };
+  #initBuffers() {
+    this.buffers = initBuffers(this.ctx);
   }
 
-  drawScene() {
-    drawScene(this.ctx, this.programInfo, this.buffers);
+  #drawScene() {
+    drawScene(this.ctx, this.programInfo, this.buffers, this.squareRotation);
   }
 }
 

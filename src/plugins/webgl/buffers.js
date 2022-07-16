@@ -1,17 +1,11 @@
-/**
- * Init buffers
- * @param {WebGLRenderingContext} gl - webgl canvas context
- * @return {WebGLBuffer | AudioBuffer}
- */
+const applyBuffer = (ctx, buffer, arr) => {
+  ctx.bindBuffer(ctx.ARRAY_BUFFER, buffer);
+  ctx.bufferData(ctx.ARRAY_BUFFER, new Float32Array(arr), ctx.STATIC_DRAW);
+};
+
 export function initBuffers(gl) {
-  // Create a buffer for the square's positions.
   const positionBuffer = gl.createBuffer();
 
-  // Select the positionBuffer as the one to apply buffer
-  // operations to from here out.
-  gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-
-  // Now create an array of positions for the square.
   const positions = [
     1.0, 1.0,
     -1.0, 1.0,
@@ -19,14 +13,21 @@ export function initBuffers(gl) {
     -1.0, -1.0,
   ];
 
-  // Now pass the list of positions into WebGL to build the
-  // shape. We do this by creating a Float32Array from the
-  // JavaScript array, then use it to fill the current buffer.
-  gl.bufferData(
-    gl.ARRAY_BUFFER,
-    new Float32Array(positions),
-    gl.STATIC_DRAW,
-  );
+  applyBuffer(gl, positionBuffer, positions);
 
-  return positionBuffer;
+  const colorBuffer = gl.createBuffer();
+
+  const colors = [
+    1.0, 1.0, 1.0, 1.0, // white
+    1.0, 0.0, 0.0, 1.0, // red
+    0.0, 1.0, 0.0, 1.0, // green
+    0.0, 0.0, 1.0, 1.0, // blue
+  ];
+
+  applyBuffer(gl, colorBuffer, colors);
+
+  return {
+    position: positionBuffer,
+    color: colorBuffer,
+  };
 }

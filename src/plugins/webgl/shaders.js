@@ -17,7 +17,8 @@ function loadShader(gl, type, source) {
   // See if it compiled successfully
   if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
     // TODO: handle error with alert
-    // gl.getShaderInfoLog(shader);
+    // eslint-disable-next-line no-console
+    console.error(gl.getShaderInfoLog(shader));
     gl.deleteShader(shader);
 
     return null;
@@ -38,7 +39,6 @@ export function initShaderProgram(gl, vsSource, fsSource) {
   const fragmentShader = loadShader(gl, gl.FRAGMENT_SHADER, fsSource);
 
   // Create the shader program
-
   const shaderProgram = gl.createProgram();
   gl.attachShader(shaderProgram, vertexShader);
   gl.attachShader(shaderProgram, fragmentShader);
@@ -57,17 +57,23 @@ export function initShaderProgram(gl, vsSource, fsSource) {
 
 export const vertexShaderSource = `
     attribute vec4 aVertexPosition;
+    attribute vec4 aVertexColor;
     
     uniform mat4 uModelViewMatrix;
     uniform mat4 uProjectionMatrix;
     
-    void main() {
+    varying lowp vec4 vColor;
+    
+    void main(void) {
       gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;
+      vColor = aVertexColor;
     }
 `;
 
 export const fragmentShaderSource = `
-    void main() {
-      gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+    varying lowp vec4 vColor;
+
+    void main(void) {
+      gl_FragColor = vColor;
     }
 `;
