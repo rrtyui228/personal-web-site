@@ -11,21 +11,33 @@ import { initBuffers } from './buffers';
 class Webgl {
   COLOR_FACTOR = 0.05;
 
+  ctx = null;
+
+  shaderProgram = null;
+
+  programInfo = null;
+
+  buffers = null;
+
+  squareRotation = 0.0;
+
+  delta = 0;
+
+  colors = [
+    1.0, 1.0, 1.0, 1.0, // white
+    1.0, 0.0, 0.0, 1.0, // red
+    0.0, 1.0, 0.0, 1.0, // green
+    0.0, 0.0, 1.0, 1.0, // blue
+  ];
+
   opacityIndexes = [3, 7, 11, 15];
+
+  MIN = 0;
+
+  MAX = 1;
 
   constructor(canvasCtx) {
     this.ctx = canvasCtx;
-    this.shaderProgram = null;
-    this.programInfo = null;
-    this.buffers = null;
-    this.squareRotation = 0.0;
-    this.delta = 0;
-    this.colors = [
-      1.0, 1.0, 1.0, 1.0, // white
-      1.0, 0.0, 0.0, 1.0, // red
-      0.0, 1.0, 0.0, 1.0, // green
-      0.0, 0.0, 1.0, 1.0, // blue
-    ];
   }
 
   init() {
@@ -43,10 +55,10 @@ class Webgl {
 
   render(now) {
     const nowSeconds = now * 0.001; // convert to seconds
-    this.squareRotation += (nowSeconds - this.delta) / 4;
+    this.squareRotation += (nowSeconds - this.delta) / 6;
     this.delta = nowSeconds;
 
-    this.#changeColors();
+    this.#changeColors(5);
     this.#drawScene();
 
     const bindRender = this.render.bind(this);
@@ -54,27 +66,30 @@ class Webgl {
     requestAnimationFrame(bindRender);
   }
 
-  #changeColors() {
+  #changeColors(chanceInPercents = 10) {
+    const chance = chanceInPercents / 100;
+
     this.colors = this.colors.map((num, index) => {
       if (this.opacityIndexes.includes(index)) {
         return num;
       }
 
       const isIncrease = getRandomNumber(2) > 0.49;
+      const isChange = getRandomNumber(1) <= chance;
 
       const newNum = isIncrease
         ? num + this.COLOR_FACTOR
         : num - this.COLOR_FACTOR;
 
-      if (newNum > 1) {
-        return 1;
+      if (newNum > this.MAX) {
+        return this.MAX;
       }
 
-      if (newNum < 0) {
-        return 0;
+      if (newNum < this.MIN) {
+        return this.MIN;
       }
 
-      return newNum;
+      return isChange ? newNum : num;
     });
 
     this.#initBuffers();
