@@ -2,27 +2,40 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const isDevelopment = process.env.NODE_ENV === 'development';
+const resolve = (resolvingPath) => path.resolve(__dirname, resolvingPath);
 
 module.exports = {
   entry: path.resolve(__dirname, 'src', 'index.jsx'),
   mode: isDevelopment ? 'development' : 'production',
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: resolve('dist'),
     filename: 'dist/bundle.js',
   },
   resolve: {
     extensions: ['.js', '.jsx', '.scss'],
     alias: {
-      shared: path.resolve(__dirname, 'src/components/shared'),
-      styles: path.resolve(__dirname, 'src/styles'),
-      utils: path.resolve(__dirname, 'src/utils'),
+      shared: resolve('src/components/shared'),
+      styles: resolve('src/styles'),
+      utils: resolve('src/utils'),
     },
   },
+  // TODO: check this warnings
+  ignoreWarnings: [
+    {
+      module: /module2\.js\?[34]/,
+    },
+    {
+      module: /[13]/,
+      message: /homepage/,
+    },
+    /warning from compiler/,
+    () => true,
+  ],
   module: {
     rules: [
       {
         test: /\.(js|jsx)$/,
-        include: path.resolve(__dirname, 'src'),
+        include: resolve('src'),
         exclude: /node_modules/,
         loader: 'babel-loader',
         options: {
@@ -64,7 +77,7 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, 'public/index.html'),
+      template: resolve('public/index.html'),
     }),
   ],
 };
