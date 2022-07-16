@@ -5,12 +5,19 @@ const isDevelopment = process.env.NODE_ENV === 'development';
 
 module.exports = {
   entry: path.resolve(__dirname, 'src', 'index.jsx'),
-  mode: 'development',
+  mode: isDevelopment ? 'development' : 'production',
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'dist/bundle.js',
   },
-  resolve: { extensions: ['.js', '.jsx', '.scss'] },
+  resolve: {
+    extensions: ['.js', '.jsx', '.scss'],
+    alias: {
+      shared: path.resolve(__dirname, 'src/components/shared'),
+      styles: path.resolve(__dirname, 'src/styles'),
+      utils: path.resolve(__dirname, 'src/utils'),
+    },
+  },
   module: {
     rules: [
       {
@@ -26,7 +33,7 @@ module.exports = {
         },
       },
       {
-        test: /\.(sa|sc|c)ss$/, // styles files
+        test: /\.(sa|sc|c)ss$/,
         use: [
           'style-loader',
           {
@@ -45,7 +52,7 @@ module.exports = {
         ],
       },
       {
-        test: /\.(png|woff|woff2|eot|ttf|svg)$/, // to import images and fonts
+        test: /\.(png|woff|woff2|eot|ttf|svg)$/,
         loader: 'url-loader',
         options: { limit: false },
       },
