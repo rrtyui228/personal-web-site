@@ -3,7 +3,7 @@ const applyBuffer = (ctx, buffer, arr) => {
   ctx.bufferData(ctx.ARRAY_BUFFER, new Float32Array(arr), ctx.STATIC_DRAW);
 };
 
-export function initBuffers(gl) {
+export function initBuffers(gl, colors) {
   const positionBuffer = gl.createBuffer();
 
   const positions = [
@@ -16,13 +16,6 @@ export function initBuffers(gl) {
   applyBuffer(gl, positionBuffer, positions);
 
   const colorBuffer = gl.createBuffer();
-
-  const colors = [
-    1.0, 1.0, 1.0, 1.0, // white
-    1.0, 0.0, 0.0, 1.0, // red
-    0.0, 1.0, 0.0, 1.0, // green
-    0.0, 0.0, 1.0, 1.0, // blue
-  ];
 
   applyBuffer(gl, colorBuffer, colors);
 
