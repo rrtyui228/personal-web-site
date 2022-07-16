@@ -36,6 +36,8 @@ class Webgl {
 
   MAX = 1;
 
+  rotationSlowFactor = 6;
+
   constructor(canvasCtx) {
     this.ctx = canvasCtx;
   }
@@ -55,7 +57,7 @@ class Webgl {
 
   render(now) {
     const nowSeconds = now * 0.001; // convert to seconds
-    this.squareRotation += (nowSeconds - this.delta) / 6;
+    this.squareRotation += (nowSeconds - this.delta) / this.rotationSlowFactor;
     this.delta = nowSeconds;
 
     this.#changeColors(5);
