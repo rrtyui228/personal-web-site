@@ -1,12 +1,11 @@
 import React from 'react';
 import s from './App.module.scss';
+import Picture from 'components/Picture';
 
-function App() {
-  return (
-    <div className={s.App}>
-      <h1> Hello, World! </h1>
-    </div>
-  );
-}
+const App = () => (
+  <div className={s.App}>
+    <Picture/>
+  </div>
+);
 
 export default App;

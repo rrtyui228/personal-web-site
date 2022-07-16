@@ -4,13 +4,16 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 /**  Project structure for this config
  *  --public
  *    --index.html
+ *    ...assets
  *  --src
  *    --components
+ *      --styles
+ *        --variables.scss
  *      --shared
  *        --index.js - export all shared from this file
  *      ...otherComponents
- *    --styles
- *      --variables.scss
+ *    --stores
+ *      --index.js - export all stores from this file
  *    --utils
  *      --index.js - export all utils from this file
  */
@@ -28,9 +31,11 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.jsx', '.scss'],
     alias: {
+      components: resolve('src/components'),
       shared: resolve('src/components/shared'),
-      styles: resolve('src/styles'),
+      styles: resolve('src/components/styles'),
       utils: resolve('src/utils'),
+      stores: resolve('src/stores'),
     },
   },
   // TODO: check this warnings
@@ -81,7 +86,7 @@ module.exports = {
       {
         test: /\.(png|woff|woff2|eot|ttf|svg)$/,
         loader: 'url-loader',
-        options: { limit: false },
+        options: {limit: false},
       },
     ],
   },
