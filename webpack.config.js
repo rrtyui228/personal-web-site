@@ -35,6 +35,7 @@ module.exports = {
       shared: resolve('src/components/shared'),
       styles: resolve('src/components/styles'),
       utils: resolve('src/utils'),
+      plugins: resolve('src/plugins'),
       stores: resolve('src/stores'),
     },
   },
@@ -86,7 +87,7 @@ module.exports = {
       {
         test: /\.(png|woff|woff2|eot|ttf|svg)$/,
         loader: 'url-loader',
-        options: {limit: false},
+        options: { limit: false },
       },
     ],
   },

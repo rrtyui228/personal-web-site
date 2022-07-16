@@ -1,9 +1,10 @@
-import React, {useCallback, useEffect, useRef} from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
+import Webgl from 'plugins/webgl';
 
-const Picture = () => {
+function Picture() {
   const canvasRef = useRef();
 
-  const resize = useCallback(() => {
+  const onResize = useCallback(() => {
     if (canvasRef?.current) {
       canvasRef.current.width = window.innerWidth;
       canvasRef.current.height = window.innerHeight;
@@ -11,23 +12,24 @@ const Picture = () => {
   }, [canvasRef]);
 
   useEffect(() => {
-    resize();
-    window.addEventListener('resize', resize);
+    onResize();
+    window.addEventListener('resize', onResize);
 
-    return () => window.removeEventListener('resize', resize);
+    return () => window.removeEventListener('resize', onResize);
   }, []);
 
   useEffect(() => {
-    // TODO: handle if browser doesn't support webgl
-    const canvasCtx = canvasRef.current.getContext('webgl');
+    if (canvasRef) {
+      // TODO: handle if browser doesn't support webgl
+      const canvasCtx = canvasRef.current.getContext('webgl');
 
-    canvasCtx.clearColor(0.0, 0.0, 0.0, 1.0);
-    canvasCtx.clear(canvasCtx.COLOR_BUFFER_BIT);
-  });
+      new Webgl(canvasCtx).init();
+    }
+  }, [canvasRef]);
 
   return (
-    <canvas ref={canvasRef}/>
+    <canvas ref={canvasRef} />
   );
-};
+}
 
 export default Picture;
