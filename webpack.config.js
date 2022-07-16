@@ -1,11 +1,25 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
+/**  Project structure for this config
+ *  --public
+ *    --index.html
+ *  --src
+ *    --components
+ *      --shared
+ *        --index.js - export all shared from this file
+ *      ...otherComponents
+ *    --styles
+ *      --variables.scss
+ *    --utils
+ *      --index.js - export all utils from this file
+ */
+
 const isDevelopment = process.env.NODE_ENV === 'development';
 const resolve = (resolvingPath) => path.resolve(__dirname, resolvingPath);
 
 module.exports = {
-  entry: path.resolve(__dirname, 'src', 'index.jsx'),
+  entry: resolve('src/index.jsx'),
   mode: isDevelopment ? 'development' : 'production',
   output: {
     path: resolve('dist'),
