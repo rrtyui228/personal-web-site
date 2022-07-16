@@ -9,6 +9,10 @@ import { drawScene } from './scenes';
 import { initBuffers } from './buffers';
 
 class Webgl {
+  COLOR_FACTOR = 0.05;
+
+  opacityIndexes = [3, 7, 11, 15];
+
   constructor(canvasCtx) {
     this.ctx = canvasCtx;
     this.shaderProgram = null;
@@ -42,7 +46,7 @@ class Webgl {
     this.squareRotation += (nowSeconds - this.delta) / 4;
     this.delta = nowSeconds;
 
-    this.changeColors();
+    this.#changeColors();
     this.#drawScene();
 
     const bindRender = this.render.bind(this);
@@ -50,18 +54,27 @@ class Webgl {
     requestAnimationFrame(bindRender);
   }
 
-  changeColors() {
+  #changeColors() {
     this.colors = this.colors.map((num, index) => {
-      const opacityIndexes = [3, 7, 11, 15];
-
-      if (opacityIndexes.includes(index)) {
+      if (this.opacityIndexes.includes(index)) {
         return num;
       }
 
-      const randomNum = getRandomNumber();
-      const isChangeColor = getRandomNumber() > 0.9;
+      const isIncrease = getRandomNumber(2) > 0.49;
 
-      return isChangeColor ? randomNum : num;
+      const newNum = isIncrease
+        ? num + this.COLOR_FACTOR
+        : num - this.COLOR_FACTOR;
+
+      if (newNum > 1) {
+        return 1;
+      }
+
+      if (newNum < 0) {
+        return 0;
+      }
+
+      return newNum;
     });
 
     this.#initBuffers();

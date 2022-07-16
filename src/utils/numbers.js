@@ -1,1 +1,1 @@
-export const getRandomNumber = () => Number(Math.random().toFixed(1));
+export const getRandomNumber = (digits = 1) => Number(Math.random().toFixed(digits));
